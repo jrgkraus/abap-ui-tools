@@ -51,6 +51,10 @@ The methods  `ask( )` and `ask_with_cancel( )` provide a simple interface to POP
 
 Both methods provide also an optional parameter `LONGTEXT` where you can pass a longtext object created with SE61
 
+## Demo report
+
+Explore `ZP_UITOOLS_DEMO` to learn more
+
 ## dependencies
 
 The coding uses ![ZCL_THROW](https://github.com/abapify/throw), which depends on ![ZCL_ASSERTABLE_UNIT](https://github.com/abapify/assert)
