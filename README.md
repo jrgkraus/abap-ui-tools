@@ -4,7 +4,7 @@ The provided class ZCL_UITOOLS can be used via inheritance or as an instance.
 
 ## Manipulate screen fields in PBO
 
-Instead of using `loop at screen.`, you can now use the following calls to influence on the screen behaviour
+Instead of using `loop at screen.`, you can now use the following calls to influence on the screen behaviour. The following examples are based on a class that inheritates from ZCL_UITOOLS
 
     " hide a field by group or name
     group( 'GR1' )->hide( ).
