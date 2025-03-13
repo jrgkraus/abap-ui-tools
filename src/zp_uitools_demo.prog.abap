@@ -21,11 +21,40 @@ select-options selopt for groupnr.
 
 class app definition inheriting from zcl_uitools.
   public section.
+    methods pbo.
     methods demo_ask.
     methods demo_ask_with_cancel.
+    methods pai.
+  private section.
+    data group_hidden type abap_bool.
+    data selopt_hidden type abap_bool.
+
 endclass.
 
 class app implementation.
+
+  method pbo.
+    try.
+        if group_hidden = abap_true.
+          group( 'GR1' )->hide( ).
+        endif.
+        if selopt_hidden = abap_true.
+          selection( 'SELOPT' )->hide( ).
+        endif.
+        if toreq = abap_true.
+          field( 'GROUPNR' )->set_required( ).
+        endif.
+        field( 'GROUPNR' )->set_dropdown_values(
+          value #(
+            ( key = '1' text = 'First group' )
+            ( key = '2' text = 'Second group' )
+            ( key = '3' text = 'Third group' )
+            ( key = '4' text = 'Forth group' ) ) ).
+      catch cx_static_check into data(e).
+        message e type 'I'.
+    endtry.
+
+  endmethod.
 
   method demo_ask.
     if ask( question = 'Is this OK?' ).
@@ -47,11 +76,28 @@ class app implementation.
     endtry.
   endmethod.
 
+
+  method pai.
+    case sscrfields-ucomm.
+      when 'P1'.
+        group_hidden = abap_true.
+      when 'P2'.
+        group_hidden = abap_false.
+      when 'P5'.
+        selopt_hidden = abap_true.
+      when 'P6'.
+        selopt_hidden = abap_false.
+      when 'P3'.
+        demo_ask( ).
+      when 'P4'.
+        demo_ask_with_cancel( ).
+      when 'P1'.
+    endcase.
+  endmethod.
+
 endclass.
 
 data application type ref to app.
-data group_hidden type abap_bool.
-data selopt_hidden type abap_bool.
 
 
 initialization.
@@ -65,39 +111,7 @@ initialization.
   application = new app( ).
 
 at selection-screen output.
-  try.
-      if group_hidden = abap_true.
-        application->group( 'GR1' )->hide( ).
-      endif.
-      if selopt_hidden = abap_true.
-        application->selection( 'SELOPT' )->hide( ).
-      endif.
-      if toreq = abap_true.
-        application->field( 'GROUPNR' )->set_required( ).
-      endif.
-      application->field( 'GROUPNR' )->set_dropdown_values(
-        value #(
-          ( key = '1' text = 'First group' )
-          ( key = '2' text = 'Second group' )
-          ( key = '3' text = 'Third group' )
-          ( key = '4' text = 'Forth group' ) ) ).
-    catch cx_static_check into data(e).
-      message e type 'I'.
-  endtry.
+  application->pbo( ).
 
 at selection-screen.
-  case sscrfields-ucomm.
-    when 'P1'.
-      group_hidden = abap_true.
-    when 'P2'.
-      group_hidden = abap_false.
-    when 'P5'.
-      selopt_hidden = abap_true.
-    when 'P6'.
-      selopt_hidden = abap_false.
-    when 'P3'.
-      application->demo_ask( ).
-    when 'P4'.
-      application->demo_ask_with_cancel( ).
-    when 'P1'.
-  endcase.
+  application->pai( ).
