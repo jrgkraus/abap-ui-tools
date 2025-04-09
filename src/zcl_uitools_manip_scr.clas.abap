@@ -81,7 +81,7 @@ class zcl_uitools_manip_scr implementation.
   method hide.
     loop at screen.
       if is_relevant( screen ).
-        screen-invisible = 1.
+        screen-active = 0.
         modify screen.
       endif.
     endloop.
@@ -133,7 +133,7 @@ class zcl_uitools_manip_scr implementation.
   method unhide.
     loop at screen.
       if is_relevant( screen ).
-        screen-invisible = 0.
+        screen-active = 1.
         modify screen.
       endif.
     endloop.
